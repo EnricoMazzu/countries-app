@@ -7,7 +7,6 @@ import timber.log.Timber
 @HiltAndroidApp
 class CountriesApp: Application() {
 
-
     override fun onCreate() {
         super.onCreate();
         initLogger();
@@ -19,6 +18,5 @@ class CountriesApp: Application() {
             Timber.plant(Timber.DebugTree())
         }
     }
-
-
+    
 }
