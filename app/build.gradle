@@ -61,7 +61,7 @@ dependencies {
     //Logger
     implementation "com.jakewharton.timber:timber:$timber"
 
-    //leak detector
+    //Leak detector
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary"
 
     //Test

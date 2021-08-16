@@ -18,5 +18,5 @@ class CountriesApp: Application() {
             Timber.plant(Timber.DebugTree())
         }
     }
-    
+
 }
