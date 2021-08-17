@@ -8,55 +8,49 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.mzzlab.demo.countriesapp.R
+import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesListBinding
+import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
+import com.mzzlab.demo.countriesapp.ui.fragment.BindingProvider
 import com.mzzlab.demo.countriesapp.ui.fragment.countries.placeholder.PlaceholderContent
+import timber.log.Timber
 
 /**
  * A fragment representing a list of Items.
  */
-class CountriesFragment : Fragment() {
+class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesViewModel>() {
 
-    private var columnCount = 1
+    override val bindingProvider: BindingProvider<FragmentCountriesListBinding>
+        get() = FragmentCountriesListBinding::inflate
+    override val viewModel: CountriesViewModel by viewModels()
+    private lateinit var adapter: CountriesRecyclerViewAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+    override fun initUI() {
+        Timber.d("Init ui...")
+        setupListComponents();
+        Timber.d("init ui done")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_countries_list, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = CountriesRecyclerViewAdapter(PlaceholderContent.ITEMS)
-            }
-        }
-        return view
+    private fun setupListComponents() {
+        adapter = CountriesRecyclerViewAdapter(PlaceholderContent.ITEMS)
+        val layoutManager = LinearLayoutManager(context)
+        attachToRecycleView(layoutManager, adapter)
     }
 
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            CountriesFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
+    private fun attachToRecycleView(countriesLayoutManager: RecyclerView.LayoutManager,
+                                    countriesAdapter:CountriesRecyclerViewAdapter){
+        with(binding.list){
+            layoutManager = countriesLayoutManager
+            adapter = countriesAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+        }
     }
 }
