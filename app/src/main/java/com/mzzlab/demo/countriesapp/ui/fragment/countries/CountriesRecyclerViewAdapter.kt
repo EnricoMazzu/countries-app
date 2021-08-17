@@ -3,37 +3,13 @@ package com.mzzlab.demo.countriesapp.ui.fragment.countries
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesBinding
-import com.mzzlab.demo.countriesapp.ui.fragment.countries.placeholder.PlaceholderContent.PlaceholderItem
+import com.mzzlab.demo.countriesapp.model.Country
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
-class CountriesRecyclerViewAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<CountriesRecyclerViewAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
-            FragmentCountriesBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
-    }
-
-    override fun getItemCount(): Int = values.size
+class CountriesRecyclerViewAdapter
+    : ListAdapter<Country, CountriesRecyclerViewAdapter.ViewHolder>(CountriesDiffCallback()) {
 
     inner class ViewHolder(binding: FragmentCountriesBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -44,5 +20,22 @@ class CountriesRecyclerViewAdapter(
             return super.toString() + " '" + contentView.text + "'"
         }
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            FragmentCountriesBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.idView.text = item.code
+        holder.contentView.text = item.name
+    }
+
 
 }

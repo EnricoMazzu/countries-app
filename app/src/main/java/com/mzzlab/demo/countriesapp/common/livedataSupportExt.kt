@@ -24,3 +24,5 @@ fun <T: Any> MutableAppData<T>.postError(e: Exception) {
     value = Resource.Error(e)
 }
 
+
+

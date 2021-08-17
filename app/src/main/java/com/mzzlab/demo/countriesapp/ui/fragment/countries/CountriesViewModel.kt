@@ -1,6 +1,16 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.countries
 
 import androidx.lifecycle.ViewModel
+import com.mzzlab.demo.countriesapp.common.AppData
+import com.mzzlab.demo.countriesapp.model.Countries
+import com.mzzlab.demo.countriesapp.repo.CountriesRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CountriesViewModel: ViewModel() {
+@HiltViewModel
+class CountriesViewModel @Inject constructor(private val countriesRepo: CountriesRepo): ViewModel() {
+
+    fun getCountries(): AppData<Countries> {
+        return countriesRepo.countries;
+    }
 }

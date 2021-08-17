@@ -1,26 +1,19 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.countries
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.mzzlab.demo.countriesapp.R
+import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesListBinding
+import com.mzzlab.demo.countriesapp.model.Country
 import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
 import com.mzzlab.demo.countriesapp.ui.fragment.BindingProvider
-import com.mzzlab.demo.countriesapp.ui.fragment.countries.placeholder.PlaceholderContent
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-/**
- * A fragment representing a list of Items.
- */
+@AndroidEntryPoint
 class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesViewModel>() {
 
     override val bindingProvider: BindingProvider<FragmentCountriesListBinding>
@@ -29,13 +22,36 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     private lateinit var adapter: CountriesRecyclerViewAdapter
 
     override fun initUI() {
-        Timber.d("Init ui...")
-        setupListComponents();
-        Timber.d("init ui done")
+        setupListComponents()
+        setupObservables();
+    }
+
+    private fun setupObservables() {
+        viewModel.getCountries().observe(viewLifecycleOwner, Observer {
+            Timber.i("setupObservables %s", it)
+            when(it){
+                is Resource.Loading -> showLoader();
+                is Resource.Error -> showError(it.exception)
+                is Resource.Success -> showResultList(it.data)
+            }
+
+        })
+    }
+
+    private fun showLoader() {
+        //TODO implement this
+    }
+
+    private fun showError(hideLoader: Exception) {
+
+    }
+
+    private fun showResultList(data: List<Country>?) {
+        adapter.submitList(data)
     }
 
     private fun setupListComponents() {
-        adapter = CountriesRecyclerViewAdapter(PlaceholderContent.ITEMS)
+        adapter = CountriesRecyclerViewAdapter();
         val layoutManager = LinearLayoutManager(context)
         attachToRecycleView(layoutManager, adapter)
     }
