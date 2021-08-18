@@ -15,8 +15,11 @@ class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelecti
 
     inner class ViewHolder(binding: FragmentCountriesBinding, private val selectionListener: CountrySelectionListener? = null) :
         RecyclerView.ViewHolder(binding.root) {
-        private val idView: TextView = binding.itemNumber
-        private val contentView: TextView = binding.content
+        private val emojiView = binding.emojiView;
+        private val lblCountryName = binding.lblCountryName
+        private val lblCode = binding.lblCode;
+        //private val idView: TextView = binding.itemNumber
+        //private val contentView: TextView = binding.content
         private var country: Country? = null
 
         init {
@@ -29,8 +32,9 @@ class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelecti
 
         fun bind(country: Country){
             this.country = country;
-            idView.text = country.code
-            contentView.text = country.name
+            emojiView.text = country.emoji
+            lblCountryName.text = country.name
+            lblCode.text = country.code
         }
     }
 
@@ -48,6 +52,5 @@ class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelecti
         val item = getItem(position)
         holder.bind(item)
     }
-
 
 }

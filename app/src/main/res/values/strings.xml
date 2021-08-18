@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="countries_fragment_label">Countries</string>
+    <string name="details_fragment_label">Details</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 

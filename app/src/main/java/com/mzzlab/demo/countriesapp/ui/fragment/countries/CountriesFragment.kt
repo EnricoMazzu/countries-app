@@ -23,7 +23,6 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     override val bindingProvider: BindingProvider<FragmentCountriesListBinding>
         get() = FragmentCountriesListBinding::inflate
     override val viewModel: CountriesViewModel by viewModels()
-
     private lateinit var adapter: CountriesRecyclerViewAdapter
 
     override fun initUI() {
@@ -76,6 +75,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
 
     private fun onCountrySelected(country: Country) {
         Timber.i("onCountrySelected: %s", country)
+        viewModel.selectCountry(country);
         findNavController().navigate(R.id.action_countriesFragment_to_countryDetailsFragment)
     }
 

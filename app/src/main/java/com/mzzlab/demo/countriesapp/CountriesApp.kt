@@ -1,6 +1,9 @@
 package com.mzzlab.demo.countriesapp
 
 import android.app.Application
+import androidx.core.provider.FontRequest
+import androidx.emoji.bundled.BundledEmojiCompatConfig
+import androidx.emoji.text.EmojiCompat
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -10,7 +13,12 @@ class CountriesApp: Application() {
     override fun onCreate() {
         super.onCreate();
         initLogger();
-        Timber.i("CountriesApp init done")
+        initEmoji();
+    }
+
+    private fun initEmoji() {
+        val config: EmojiCompat.Config = BundledEmojiCompatConfig(applicationContext)
+        EmojiCompat.init(config)
     }
 
     private fun initLogger() {

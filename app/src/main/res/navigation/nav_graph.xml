@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/countryDetailsFragment"
         android:name="com.mzzlab.demo.countriesapp.ui.fragment.details.CountryDetailsFragment"
-        android:label="fragment_country_details"
+        android:label="@string/details_fragment_label"
         tools:layout="@layout/fragment_country_details" />
 </navigation>

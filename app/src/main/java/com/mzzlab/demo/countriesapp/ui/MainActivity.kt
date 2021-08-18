@@ -3,20 +3,29 @@ package com.mzzlab.demo.countriesapp.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.mzzlab.demo.countriesapp.R
 import com.mzzlab.demo.countriesapp.databinding.ActivityMainBinding
+import com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+    private val navController: NavController by lazy {
+        findNavController(R.id.nav_host_fragment_content_main)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +35,26 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        // navigate to details when a country is selected
+        /*viewModel.selectedCountry.observe(this, {
+            it?.let {
+                navController.navigate(R.id.action_countriesFragment_to_countryDetailsFragment)
+            }
+        })
+
+        val countryDetailsFragmentId = R.id.countryDetailsFragment;
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id != countryDetailsFragmentId){
+                viewModel.invalidateSelection();
+            }
+        }
+
+        Timber.i(">>> countriesFragment %s countryDetailsFragment %s", R.id.countriesFragment , countryDetailsFragmentId )
+
+         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
