@@ -9,5 +9,14 @@
         android:id="@+id/countriesFragment"
         android:name="com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesFragment"
         android:label="@string/countries_fragment_label"
-        tools:layout="@layout/fragment_countries_list" />
+        tools:layout="@layout/fragment_countries_list" >
+        <action
+            android:id="@+id/action_countriesFragment_to_countryDetailsFragment"
+            app:destination="@id/countryDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/countryDetailsFragment"
+        android:name="com.mzzlab.demo.countriesapp.ui.fragment.details.CountryDetailsFragment"
+        android:label="fragment_country_details"
+        tools:layout="@layout/fragment_country_details" />
 </navigation>

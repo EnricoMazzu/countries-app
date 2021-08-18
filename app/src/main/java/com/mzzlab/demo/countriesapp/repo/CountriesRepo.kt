@@ -25,12 +25,10 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
     val countries: AppData<Countries> get() = _countries
 
     fun reload(){
-
         loadCountriesInternal(_countries)
     }
 
     private fun loadCountriesInternal(mediator: MediatorLiveData<Resource<Countries>>){
-        mediator.value = Resource.Loading()
         val source = getCountriesSource();
         mediator.addSource(source) {
             // detach the source when resource is loaded

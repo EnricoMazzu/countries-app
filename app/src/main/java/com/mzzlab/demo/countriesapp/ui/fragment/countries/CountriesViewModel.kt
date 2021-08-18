@@ -13,4 +13,8 @@ class CountriesViewModel @Inject constructor(private val countriesRepo: Countrie
     fun getCountries(): AppData<Countries> {
         return countriesRepo.countries;
     }
+
+    fun reload() {
+        countriesRepo.reload()
+    }
 }

@@ -13,7 +13,7 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
     override val viewModel: CountryDetailsViewModel by viewModels()
 
     override fun initUI() {
-        TODO("Not yet implemented")
+
     }
 
 }

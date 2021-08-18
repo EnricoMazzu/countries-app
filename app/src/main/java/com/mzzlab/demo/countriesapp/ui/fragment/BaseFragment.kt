@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.snackbar.Snackbar
 
 typealias BindingProvider<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 
 
 abstract class BaseFragment<VB : ViewBinding, VM: ViewModel>: Fragment() {
 
+    private var errorSnack: Snackbar? = null
     private var _binding: VB? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -43,6 +45,22 @@ abstract class BaseFragment<VB : ViewBinding, VM: ViewModel>: Fragment() {
 
     open fun onBindingReady(){
         //extend to implement it
+    }
+
+    protected fun showErrorBar(exception: Exception) {
+        errorSnack = with(Snackbar.make(requireView(), exception.message!!, Snackbar.LENGTH_LONG)) {
+            animationMode = Snackbar.ANIMATION_MODE_SLIDE
+            show()
+            this
+        }
+    }
+
+    protected fun hideErrorBar(){
+        errorSnack?.let {
+            if (it.isShown) {
+                it.dismiss()
+            }
+        }
     }
 
 }

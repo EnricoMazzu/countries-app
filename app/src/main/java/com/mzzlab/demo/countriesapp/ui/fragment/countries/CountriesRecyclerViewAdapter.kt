@@ -8,16 +8,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesBinding
 import com.mzzlab.demo.countriesapp.model.Country
 
-class CountriesRecyclerViewAdapter
+typealias CountrySelectionListener = (Country) -> Unit
+
+class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelectionListener? = null)
     : ListAdapter<Country, CountriesRecyclerViewAdapter.ViewHolder>(CountriesDiffCallback()) {
 
-    inner class ViewHolder(binding: FragmentCountriesBinding) :
+    inner class ViewHolder(binding: FragmentCountriesBinding, private val selectionListener: CountrySelectionListener? = null) :
         RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+        private val idView: TextView = binding.itemNumber
+        private val contentView: TextView = binding.content
+        private var country: Country? = null
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+        init {
+            binding.root.setOnClickListener {
+                country?.let {
+                    selectionListener?.invoke(it)
+                }
+            }
+        }
+
+        fun bind(country: Country){
+            this.country = country;
+            idView.text = country.code
+            contentView.text = country.name
         }
     }
 
@@ -27,14 +40,13 @@ class CountriesRecyclerViewAdapter
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), selectionListener
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.idView.text = item.code
-        holder.contentView.text = item.name
+        holder.bind(item)
     }
 
 
