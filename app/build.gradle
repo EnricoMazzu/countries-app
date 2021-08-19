@@ -17,6 +17,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def countryServerUrl = "https://countries.trevorblades.com"
+        buildConfigField("String", "COUNTRY_SERVER_URL", "\"$countryServerUrl\"")
+        buildConfigField("String", "CACHE_DB_NAME", "\"apollo.db\"")
     }
 
     buildTypes {

@@ -23,6 +23,7 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
     override fun initUI() {
 
         viewModel.getCountryDetails().observe(viewLifecycleOwner, {
+            Timber.d("getCountryDetails %s", it)
             when(it){
                 is Resource.Loading-> {
                     onLoading();
@@ -31,7 +32,7 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
                     showCountryInfo(it.data!!);
                 }
                 is Resource.Error -> {
-                    showError(it.exception)
+                    it.getExceptionIfNotHandled()?.let { ex -> showError(ex) }
                 }
             }
         })
@@ -59,6 +60,6 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
 
     private fun showError(exception: Exception) {
         Timber.e(exception,"error: %s", exception.message)
-        //TODO("Not yet implemented")
+
     }
 }

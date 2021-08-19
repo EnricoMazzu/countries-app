@@ -4,6 +4,7 @@ import android.content.Context
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.cache.normalized.withNormalizedCache
+import com.mzzlab.demo.countriesapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +17,9 @@ class GraphqlModule {
 
     @Provides
     fun provideApolloClient(@ApplicationContext context: Context): ApolloClient {
-        val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, "apollo.db")
+        val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, BuildConfig.CACHE_DB_NAME)
         return ApolloClient(
-            serverUrl = "https://countries.trevorblades.com"
+            serverUrl = BuildConfig.COUNTRY_SERVER_URL
         ).withNormalizedCache(sqlNormalizedCacheFactory);
     }
 

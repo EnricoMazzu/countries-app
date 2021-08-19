@@ -7,6 +7,7 @@ import com.apollographql.apollo3.cache.normalized.isFromCache
 import com.apollographql.apollo3.cache.normalized.watch
 import com.mzzlab.demo.countriesapp.api.ApiException
 import com.mzzlab.demo.countriesapp.api.DataProvider
+import com.mzzlab.demo.countriesapp.api.ErrorCode
 import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.graphql.CountriesQuery
@@ -78,7 +79,7 @@ class GraphQlDataProvider(private val client: ApolloClient): DataProvider {
     }
 
 
-    suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails>{
+    private suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails>{
         return try {
             val result = client.query(CountryDetailsQuery(code))
             result.data
@@ -93,7 +94,7 @@ class GraphQlDataProvider(private val client: ApolloClient): DataProvider {
 
     private fun createError(errors: List<Error>): Exception {
         //TODO complete this
-        return ApiException("TODO", "to be completed");
+        return ApiException(ErrorCode.GENERIC_ERROR, "to be completed");
     }
 
 }

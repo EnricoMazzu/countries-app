@@ -35,13 +35,12 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
             Timber.i("getCountries observe %s", it::class.simpleName)
             when(it){
                 is Resource.Loading -> setOnLoading();
-                is Resource.Error -> showError(it.exception)
+                is Resource.Error -> it.getExceptionIfNotHandled()?.let { ex -> showError(ex)}
                 is Resource.Success -> {
                     Timber.i("success list fetch: fromCache:${it.fromCache}")
                     showResultList(it.data)
                 }
             }
-
         })
     }
     private fun setOnLoading() {
