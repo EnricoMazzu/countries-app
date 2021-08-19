@@ -23,7 +23,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     override val bindingProvider: BindingProvider<FragmentCountriesListBinding>
         get() = FragmentCountriesListBinding::inflate
     override val viewModel: CountriesViewModel by viewModels()
-    private lateinit var adapter: CountriesRecyclerViewAdapter
+    private var adapter: CountriesRecyclerViewAdapter? = null
 
     override fun initUI() {
         setupListComponents()
@@ -58,7 +58,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
         binding.swipeRefreshLayout.isRefreshing = false;
         binding.progressIndicator.visibility = View.GONE
         hideErrorBar()
-        adapter.submitList(data)
+        adapter?.submitList(data)
     }
 
     private fun setupListComponents() {
@@ -66,7 +66,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
             onCountrySelected(it)
         };
         val layoutManager = LinearLayoutManager(context)
-        attachToRecycleView(layoutManager, adapter)
+        attachToRecycleView(layoutManager, adapter!!)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.reload();
@@ -91,5 +91,10 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
                 )
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapter = null;
     }
 }

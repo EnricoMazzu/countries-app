@@ -1,4 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="emoji_flag_detail_text_size">60sp</dimen>
+    <dimen name="emoji_flag_detail_width">80sp</dimen>
 </resources>
