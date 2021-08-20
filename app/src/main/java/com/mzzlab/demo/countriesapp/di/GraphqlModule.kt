@@ -17,10 +17,15 @@ class GraphqlModule {
 
     @Provides
     fun provideApolloClient(@ApplicationContext context: Context): ApolloClient {
-        val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, BuildConfig.CACHE_DB_NAME)
-        return ApolloClient(
+        var client = ApolloClient(
             serverUrl = BuildConfig.COUNTRY_SERVER_URL
-        ).withNormalizedCache(sqlNormalizedCacheFactory);
+        )
+        // more for dev/test purpose
+        if(BuildConfig.USE_NATIVE_DB_CACHE){
+            val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, BuildConfig.CACHE_DB_NAME)
+            client = client.withNormalizedCache(sqlNormalizedCacheFactory);
+        }
+        return client
     }
 
 }

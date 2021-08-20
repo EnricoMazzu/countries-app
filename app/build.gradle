@@ -20,6 +20,7 @@ android {
 
         def countryServerUrl = "https://countries.trevorblades.com"
         buildConfigField("String", "COUNTRY_SERVER_URL", "\"$countryServerUrl\"")
+        buildConfigField("boolean", "USE_NATIVE_DB_CACHE", "true")
         buildConfigField("String", "CACHE_DB_NAME", "\"apollo.db\"")
     }
 
