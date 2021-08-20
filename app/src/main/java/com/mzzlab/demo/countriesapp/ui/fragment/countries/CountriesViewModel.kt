@@ -1,5 +1,6 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.countries
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.model.Countries
@@ -9,7 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CountriesViewModel @Inject constructor(private val countriesRepo: CountriesRepo): ViewModel() {
+class CountriesViewModel @Inject constructor(
+    private val countriesRepo: CountriesRepo,
+    savedStateHandle: SavedStateHandle,
+    ): ViewModel() {
 
     fun getCountries(): AppData<Countries> {
         return countriesRepo.countries;
