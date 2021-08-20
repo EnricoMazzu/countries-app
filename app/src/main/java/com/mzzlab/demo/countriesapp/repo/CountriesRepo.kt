@@ -3,19 +3,13 @@ package com.mzzlab.demo.countriesapp.repo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.common.AppData
-import com.mzzlab.demo.countriesapp.common.MutableAppData
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.common.isResourceLoaded
 import com.mzzlab.demo.countriesapp.model.Countries
 import com.mzzlab.demo.countriesapp.model.Country
 import com.mzzlab.demo.countriesapp.model.CountryDetails
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
