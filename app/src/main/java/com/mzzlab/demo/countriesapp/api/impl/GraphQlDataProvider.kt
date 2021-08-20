@@ -1,14 +1,11 @@
 package com.mzzlab.demo.countriesapp.api.impl
 
-import androidx.lifecycle.liveData
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Error
 import com.apollographql.apollo3.cache.normalized.isFromCache
-import com.apollographql.apollo3.cache.normalized.watch
 import com.mzzlab.demo.countriesapp.api.ApiException
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.api.ErrorCode
-import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.graphql.CountriesQuery
 import com.mzzlab.demo.countriesapp.graphql.CountryDetailsQuery
@@ -18,16 +15,10 @@ import com.mzzlab.demo.countriesapp.model.CountryDetails
 
 class GraphQlDataProvider(private val client: ApolloClient): DataProvider {
 
-    override fun getCountries(): AppData<Countries> {
-        return liveData {
-            emit(Resource.Loading())
-            // according to doc, apollo is main thread safe: execute query in background
-            // on Dispatcher.IO
-            val resultResource = getCountriesResource();
-            // emit result (Success or Error)
-            emit(resultResource)
-        }
+    override suspend fun getCountries(): Resource<Countries> {
+        return getCountriesResource();
     }
+
 
     private suspend fun getCountriesResource(): Resource<Countries>{
         return try {
@@ -67,7 +58,7 @@ class GraphQlDataProvider(private val client: ApolloClient): DataProvider {
     }
 
 
-    override fun getCountryDetails(code: String): AppData<CountryDetails> {
+    /*override fun getCountryDetails(code: String): AppData<CountryDetails> {
         return liveData {
             emit(Resource.Loading())
             // according to doc, apollo is main thread safe: execute query in background
@@ -76,8 +67,11 @@ class GraphQlDataProvider(private val client: ApolloClient): DataProvider {
             // emit result (Success or Error)
             emit(resultResource)
         }
-    }
+    }*/
 
+    override suspend fun getCountryDetails(code: String): Resource<CountryDetails> {
+        return getCountryDetailsResource(code)
+    }
 
     private suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails>{
         return try {

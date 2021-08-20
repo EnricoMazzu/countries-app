@@ -3,6 +3,7 @@ package com.mzzlab.demo.countriesapp.repo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.common.Resource
@@ -40,7 +41,12 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
     }
 
     private fun getCountriesSource(): AppData<Countries> {
-        return dataProvider.getCountries();
+        return liveData {
+            emit(Resource.Loading())
+            val res = dataProvider.getCountries();
+            emit(res)
+        }
+
     }
 
     fun reload(){
@@ -52,7 +58,11 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
     }
 
     fun getCountryDetails(code:String): AppData<CountryDetails> {
-        return dataProvider.getCountryDetails(code)
+        return liveData {
+            emit(Resource.Loading())
+            val res = dataProvider.getCountryDetails(code)
+            emit(res)
+        }
     }
 
 }

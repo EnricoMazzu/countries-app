@@ -6,7 +6,7 @@ import com.mzzlab.demo.countriesapp.model.Countries
 import com.mzzlab.demo.countriesapp.model.CountryDetails
 
 interface DataProvider {
-    fun getCountries(): LiveData<Resource<Countries>>
+    suspend fun getCountries(): Resource<Countries>
 
-    fun getCountryDetails(code:String): LiveData<Resource<CountryDetails>>
+    suspend fun getCountryDetails(code:String): Resource<CountryDetails>
 }
