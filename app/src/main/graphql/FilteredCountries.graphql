@@ -1,0 +1,16 @@
+query FilteredCountries($continent: String) {
+    countries(
+    filter:{
+        continent:{
+           eq: $continent
+        }
+    })
+    {
+      code
+      name
+      emoji
+      languages {
+         name
+      }
+   }
+}

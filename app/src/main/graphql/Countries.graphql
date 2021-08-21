@@ -1,7 +1,10 @@
 query Countries {
-    countries {
+    countries{
       code
       name
       emoji
+      languages {
+         name
+      }
    }
 }
