@@ -1,58 +1,69 @@
 package com.mzzlab.demo.countriesapp.repo
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.mzzlab.demo.countriesapp.api.DataProvider
-import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.common.isResourceLoaded
 import com.mzzlab.demo.countriesapp.model.Countries
 import com.mzzlab.demo.countriesapp.model.Country
 import com.mzzlab.demo.countriesapp.model.CountryDetails
+import com.mzzlab.demo.countriesapp.model.CountryFilters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) {
 
-    private val _countries: MediatorLiveData<Resource<Countries>> by lazy {
-        val lv = MediatorLiveData<Resource<Countries>>()
-        loadCountriesInternal(lv)
-        lv
+    //work as a memory cache
+    private val _countries: MutableStateFlow<Resource<Countries>> by lazy {
+        MutableStateFlow(Resource.Loading(initial = true));
     }
-    val countries: AppData<Countries> get() = _countries
+    val countries: Flow<Resource<Countries>> get()  = _countries
 
     private val _selectedCountry: MutableLiveData<Country?> by lazy {
         MutableLiveData()
     }
     val selectedCountry: LiveData<Country?> get() = _selectedCountry
 
-    private fun loadCountriesInternal(mediator: MediatorLiveData<Resource<Countries>>){
-        val source = getCountriesSource();
-        mediator.addSource(source) {
-            // detach the source when resource is loaded
-            if(isResourceLoaded(it)){
-                mediator.removeSource(source)
-            }
-            mediator.postValue(it);
-        }
+    suspend fun reload(countryFilters: CountryFilters? = null){
+        loadCountriesInternal(countryFilters = countryFilters, useNetwork = true)
     }
 
-    private fun getCountriesSource(): AppData<Countries> {
-        return dataProvider.getCountries();
+    suspend fun load(countryFilters: CountryFilters? = null){
+        val current = _countries.value;
+        //if(isToLoadFromDataSource(current)){
+            loadCountriesInternal(
+                countryFilters = countryFilters,
+                useNetwork = false
+            )
+        //}
     }
 
-    fun reload(){
-        loadCountriesInternal(_countries)
+    private fun isToLoadFromDataSource(current: Resource<Countries>) = current is Resource.Loading && current.initial
+
+    private suspend fun loadCountriesInternal(countryFilters: CountryFilters? = null, useNetwork: Boolean) {
+        Timber.d("loadCountriesInternal useNetwork: %s", useNetwork)
+        _countries.emit(Resource.Loading())
+        val resource = dataProvider.getCountries(
+            filter = countryFilters,
+            useNetwork = useNetwork
+        );
+        _countries.emit(resource)
     }
 
     fun setSelectedCountry(country: Country?) {
         _selectedCountry.postValue(country)
     }
 
-    fun getCountryDetails(code:String): AppData<CountryDetails> {
-        return dataProvider.getCountryDetails(code)
+    fun getCountryDetails(code:String): Flow<Resource<CountryDetails>> {
+        return flow {
+            emit(Resource.Loading())
+            val res = dataProvider.getCountryDetails(code)
+            emit(res)
+        }.flowOn(Dispatchers.IO)
     }
 
 }

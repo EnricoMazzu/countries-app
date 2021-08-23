@@ -1,12 +1,15 @@
 package com.mzzlab.demo.countriesapp.api
 
-import androidx.lifecycle.LiveData
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.model.Countries
-import com.mzzlab.demo.countriesapp.model.CountryDetails
+import com.mzzlab.demo.countriesapp.model.*
 
 interface DataProvider {
-    fun getCountries(): LiveData<Resource<Countries>>
 
-    fun getCountryDetails(code:String): LiveData<Resource<CountryDetails>>
+    suspend fun getCountries(filter: CountryFilters? = null, useNetwork: Boolean? = false): Resource<Countries>
+
+    suspend fun getCountryDetails(code:String): Resource<CountryDetails>
+
+    suspend fun getContinents(): Resource<List<Continent>>
+
+    suspend fun getLanguages(): Resource<List<Language>>
 }

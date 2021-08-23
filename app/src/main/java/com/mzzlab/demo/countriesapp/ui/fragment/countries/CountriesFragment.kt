@@ -1,17 +1,19 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.countries
 
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.mzzlab.demo.countriesapp.R
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesListBinding
 import com.mzzlab.demo.countriesapp.model.Country
+import com.mzzlab.demo.countriesapp.model.CountryFilters
 import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
 import com.mzzlab.demo.countriesapp.ui.fragment.BindingProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +28,28 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     private var adapter: CountriesRecyclerViewAdapter? = null
 
     override fun initUI() {
+        setHasOptionsMenu(true)
         setupListComponents()
         setupObservables();
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_countries, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_filters -> {
+                val filter = if (viewModel.isFiltered()){
+                    CountryFilters("EU")
+                }else{
+                    CountryFilters()
+                }
+                viewModel.setFilter(filter)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setupObservables() {

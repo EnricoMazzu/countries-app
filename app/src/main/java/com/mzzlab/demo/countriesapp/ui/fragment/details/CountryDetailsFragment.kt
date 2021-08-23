@@ -16,7 +16,7 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
     override val bindingProvider: BindingProvider<FragmentCountryDetailsBinding>
         get() = FragmentCountryDetailsBinding::inflate
     override val viewModel: CountryDetailsViewModel by viewModels()
-    val notAvailableValue: String by lazy {
+    private val notAvailableValue: String by lazy {
         getString(R.string.label_data_not_available)
     }
 
