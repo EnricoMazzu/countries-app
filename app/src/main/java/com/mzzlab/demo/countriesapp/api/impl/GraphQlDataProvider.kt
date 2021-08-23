@@ -2,6 +2,7 @@ package com.mzzlab.demo.countriesapp.api.impl
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloRequest
+import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Error
 import com.apollographql.apollo3.api.Query
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
@@ -14,10 +15,7 @@ import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.graphql.CountriesQuery
 import com.mzzlab.demo.countriesapp.graphql.CountryDetailsQuery
 import com.mzzlab.demo.countriesapp.graphql.FilteredCountriesQuery
-import com.mzzlab.demo.countriesapp.model.Countries
-import com.mzzlab.demo.countriesapp.model.Country
-import com.mzzlab.demo.countriesapp.model.CountryDetails
-import com.mzzlab.demo.countriesapp.model.CountryFilters
+import com.mzzlab.demo.countriesapp.model.*
 
 class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
 
@@ -59,7 +57,7 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
         val result = client.query(request)
         return when (result.hasErrors()) {
             false -> Resource.Success(mapper.invoke(result.data), result.isFromCache)
-            else -> Resource.Error(createError(result.errors!!))
+            else -> Resource.Error(createError(result, result.errors!!))
         }
     }
 
@@ -81,21 +79,29 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
         return getCountryDetailsResource(code)
     }
 
+    override suspend fun getContinents(): Resource<List<Continent>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getLanguages(): Resource<List<Language>> {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails> {
         return try {
             val result = client.query(CountryDetailsQuery(code))
             result.data
             when (result.hasErrors()) {
                 false -> Resource.Success(result.data.mapToModel(), result.isFromCache)
-                else -> Resource.Error(createError(result.errors!!))
+                else -> Resource.Error(createError(result, result.errors!!))
             }
         } catch (ex: Exception) {
             Resource.Error(ex)
         }
     }
 
-    private fun createError(errors: List<Error>): Exception {
-        //TODO complete this
+    private fun <D: Query.Data> createError(result: ApolloResponse<D>, errors: List<Error>): Exception {
+
         return ApiException(ErrorCode.GENERIC_ERROR, "to be completed");
     }
 

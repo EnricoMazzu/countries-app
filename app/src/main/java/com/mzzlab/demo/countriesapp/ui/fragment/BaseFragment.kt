@@ -28,12 +28,11 @@ abstract class BaseFragment<VB : ViewBinding, VM: ViewModel>: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = bindingProvider.invoke(layoutInflater, container, false);
-        onBindingReady()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initUI();
+        initUI()
     }
 
     abstract fun initUI()
@@ -43,9 +42,6 @@ abstract class BaseFragment<VB : ViewBinding, VM: ViewModel>: Fragment() {
         _binding = null;
     }
 
-    open fun onBindingReady(){
-        //extend to implement it
-    }
 
     protected fun showErrorBar(exception: Exception) {
         errorSnack = with(Snackbar.make(requireView(), exception.message!!, Snackbar.LENGTH_LONG)) {
@@ -53,6 +49,10 @@ abstract class BaseFragment<VB : ViewBinding, VM: ViewModel>: Fragment() {
             show()
             this
         }
+    }
+
+    protected fun isErrorShowed(): Boolean {
+        return errorSnack?.isShown ?: false
     }
 
     protected fun hideErrorBar(){

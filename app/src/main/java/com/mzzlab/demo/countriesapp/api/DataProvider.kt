@@ -1,9 +1,7 @@
 package com.mzzlab.demo.countriesapp.api
 
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.model.Countries
-import com.mzzlab.demo.countriesapp.model.CountryDetails
-import com.mzzlab.demo.countriesapp.model.CountryFilters
+import com.mzzlab.demo.countriesapp.model.*
 
 interface DataProvider {
 
@@ -11,4 +9,7 @@ interface DataProvider {
 
     suspend fun getCountryDetails(code:String): Resource<CountryDetails>
 
+    suspend fun getContinents(): Resource<List<Continent>>
+
+    suspend fun getLanguages(): Resource<List<Language>>
 }

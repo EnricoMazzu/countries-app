@@ -34,12 +34,12 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
 
     suspend fun load(countryFilters: CountryFilters? = null){
         val current = _countries.value;
-        if(isToLoadFromDataSource(current)){
+        //if(isToLoadFromDataSource(current)){
             loadCountriesInternal(
                 countryFilters = countryFilters,
                 useNetwork = false
             )
-        }
+        //}
     }
 
     private fun isToLoadFromDataSource(current: Resource<Countries>) = current is Resource.Loading && current.initial

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesBinding
 import com.mzzlab.demo.countriesapp.model.Country
+import com.mzzlab.demo.countriesapp.util.debouncingOnClick
 
 typealias CountrySelectionListener = (Country) -> Unit
 
@@ -23,7 +24,7 @@ class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelecti
         private var country: Country? = null
 
         init {
-            binding.root.setOnClickListener {
+            binding.root.debouncingOnClick {
                 country?.let {
                     selectionListener?.invoke(it)
                 }
