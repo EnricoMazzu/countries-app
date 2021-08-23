@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.model.Countries
-import com.mzzlab.demo.countriesapp.model.Country
-import com.mzzlab.demo.countriesapp.model.CountryDetails
-import com.mzzlab.demo.countriesapp.model.CountryFilters
+import com.mzzlab.demo.countriesapp.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -17,32 +14,25 @@ import javax.inject.Singleton
 @Singleton
 class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) {
 
-    //work as a memory cache
     private val _countries: MutableStateFlow<Resource<Countries>> by lazy {
         MutableStateFlow(Resource.Loading(initial = true));
     }
     val countries: Flow<Resource<Countries>> get()  = _countries
+
 
     private val _selectedCountry: MutableLiveData<Country?> by lazy {
         MutableLiveData()
     }
     val selectedCountry: LiveData<Country?> get() = _selectedCountry
 
-    suspend fun reload(countryFilters: CountryFilters? = null){
-        loadCountriesInternal(countryFilters = countryFilters, useNetwork = true)
-    }
 
-    suspend fun load(countryFilters: CountryFilters? = null){
-        val current = _countries.value;
-        //if(isToLoadFromDataSource(current)){
-            loadCountriesInternal(
-                countryFilters = countryFilters,
-                useNetwork = false
-            )
-        //}
-    }
+    suspend fun load(countryFilters: CountryFilters? = null, forceNetworkFetch: Boolean = false){
+        loadCountriesInternal(
+            countryFilters = countryFilters,
+            useNetwork = forceNetworkFetch
+        )
 
-    private fun isToLoadFromDataSource(current: Resource<Countries>) = current is Resource.Loading && current.initial
+    }
 
     private suspend fun loadCountriesInternal(countryFilters: CountryFilters? = null, useNetwork: Boolean) {
         Timber.d("loadCountriesInternal useNetwork: %s", useNetwork)
@@ -63,7 +53,23 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
             emit(Resource.Loading())
             val res = dataProvider.getCountryDetails(code)
             emit(res)
-        }.flowOn(Dispatchers.IO)
+        }
+    }
+
+    fun getLanguages(): Flow<Resource<List<Language>>>{
+        return flow {
+            emit(Resource.Loading())
+            val resource = dataProvider.getLanguages();
+            emit(resource)
+        }
+    }
+
+    fun getContinents(): Flow<Resource<List<Continent>>>{
+        return flow {
+            emit(Resource.Loading())
+            val resource = dataProvider.getContinents();
+            emit(resource)
+        }
     }
 
 }

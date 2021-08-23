@@ -12,9 +12,7 @@ import com.mzzlab.demo.countriesapp.api.ApiException
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.api.ErrorCode
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.graphql.CountriesQuery
-import com.mzzlab.demo.countriesapp.graphql.CountryDetailsQuery
-import com.mzzlab.demo.countriesapp.graphql.FilteredCountriesQuery
+import com.mzzlab.demo.countriesapp.graphql.*
 import com.mzzlab.demo.countriesapp.model.*
 
 class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
@@ -31,9 +29,7 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
             when(it){
                 is FilteredCountriesQuery.Data -> it.mapToModel();
                 is CountriesQuery.Data -> it.mapToModel();
-                else -> {
-                    throw IllegalArgumentException("Invalid type")
-                }
+                else -> throw IllegalArgumentException("Invalid Query Data type")
             }
         }
         return applyClientSideFilter(originalResource, filter?.language);
@@ -80,11 +76,37 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
     }
 
     override suspend fun getContinents(): Resource<List<Continent>> {
-        TODO("Not yet implemented")
+        return getContinentsResource();
+    }
+
+    private suspend fun getContinentsResource(): Resource<List<Continent>> {
+        return try {
+            val result = client.query(ContinentsQuery())
+            result.data
+            when (result.hasErrors()) {
+                false -> Resource.Success(result.data.mapToModel(), result.isFromCache)
+                else -> Resource.Error(createError(result, result.errors!!))
+            }
+        } catch (ex: Exception) {
+            Resource.Error(ex)
+        }
     }
 
     override suspend fun getLanguages(): Resource<List<Language>> {
-        TODO("Not yet implemented")
+        return getLanguagesResource();
+    }
+
+    private suspend fun getLanguagesResource(): Resource<List<Language>> {
+        return try {
+            val result = client.query(LanguagesQuery())
+            result.data
+            when (result.hasErrors()) {
+                false -> Resource.Success(result.data.mapToModel(), result.isFromCache)
+                else -> Resource.Error(createError(result, result.errors!!))
+            }
+        } catch (ex: Exception) {
+            Resource.Error(ex)
+        }
     }
 
     private suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails> {
@@ -101,7 +123,6 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
     }
 
     private fun <D: Query.Data> createError(result: ApolloResponse<D>, errors: List<Error>): Exception {
-
         return ApiException(ErrorCode.GENERIC_ERROR, "to be completed");
     }
 

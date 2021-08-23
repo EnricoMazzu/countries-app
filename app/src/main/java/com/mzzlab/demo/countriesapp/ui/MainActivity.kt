@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModels()
     private val navController: NavController by lazy {
         findNavController(R.id.nav_host_fragment_content_main)
     }

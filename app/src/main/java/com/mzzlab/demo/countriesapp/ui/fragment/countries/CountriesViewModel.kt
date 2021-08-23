@@ -42,7 +42,7 @@ class CountriesViewModel @Inject constructor(
 
     fun reload() {
         viewModelScope.launch {
-            countriesRepo.reload(filters.value)
+            countriesRepo.load(filters.value, true)
         }
     }
 

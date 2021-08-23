@@ -8,10 +8,10 @@
     <string name="previous">Previous</string>
     <string name="flag_label">Flag</string>
     <string name="label_continent">Continent</string>
-    <string name="label_phone" >Phone</string>
-    <string name="label_capital" >Capital</string>
-    <string name="label_currency" >Currency</string>
-    <string name="label_languages" >Languages</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_capital">Capital</string>
+    <string name="label_currency">Currency</string>
+    <string name="label_languages">Languages</string>
     <string name="label_data_not_available">N.A</string>
     <string name="action_filters">Filters</string>
     <!--<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->

@@ -1,3 +1,3 @@
 package com.mzzlab.demo.countriesapp.model
 
-data class Continent(val Code:String, val name:String);
+data class Continent(val code:String, val name:String);
