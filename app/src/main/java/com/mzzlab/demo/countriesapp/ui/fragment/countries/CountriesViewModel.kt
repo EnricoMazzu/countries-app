@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,7 @@ class CountriesViewModel @Inject constructor(
     )
 
     init {
+        Timber.i(">>> Instance: %s",this)
         viewModelScope.launch {
             filters.collect {
                 savedStateHandle.set(COUNTRY_FILTERS_KEY, it)
@@ -38,6 +40,11 @@ class CountriesViewModel @Inject constructor(
     fun getCountries(): AppData<Countries> {
         return countriesRepo.countries.asLiveData();
     }
+
+    val continents = countriesRepo.getContinents().asLiveData()
+
+    val languages = countriesRepo.getLanguages().asLiveData()
+
 
 
     fun reload() {
@@ -55,6 +62,7 @@ class CountriesViewModel @Inject constructor(
     }
 
     fun isFiltered() = this.filters.value.isNullOrEmpty()
+
 
 
     companion object{

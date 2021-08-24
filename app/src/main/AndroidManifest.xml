@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CountriesApp">
         <activity
+            android:exported="true"
             android:name=".ui.LaunchActivity"
             android:theme="@style/Theme.CountriesApp.LaunchTheme"
             >

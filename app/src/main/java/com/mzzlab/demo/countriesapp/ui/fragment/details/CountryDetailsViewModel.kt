@@ -6,6 +6,7 @@ import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.model.CountryDetails
 import com.mzzlab.demo.countriesapp.repo.CountriesRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

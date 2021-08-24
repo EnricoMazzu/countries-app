@@ -9,13 +9,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mzzlab.demo.countriesapp.R
 import com.mzzlab.demo.countriesapp.common.Resource
+import com.mzzlab.demo.countriesapp.databinding.BottomSheetFilterBinding
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesListBinding
 import com.mzzlab.demo.countriesapp.model.Country
 import com.mzzlab.demo.countriesapp.model.CountryFilters
 import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
 import com.mzzlab.demo.countriesapp.ui.fragment.BindingProvider
+import com.mzzlab.demo.countriesapp.ui.fragment.filter.FiltersBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -40,12 +43,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_filters -> {
-                val filter = if (viewModel.isFiltered()){
-                    CountryFilters("EU")
-                }else{
-                    CountryFilters()
-                }
-                viewModel.setFilter(filter)
+                showFilterDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -112,6 +110,10 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
                 )
             )
         }
+    }
+
+    private fun showFilterDialog(){
+        FiltersBottomSheetFragment().show(childFragmentManager, "bottom");
     }
 
     override fun onDestroyView() {

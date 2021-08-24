@@ -1,7 +1,7 @@
 package com.mzzlab.demo.countriesapp.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CountryFilters(val continent: String? = null, val language:String? = null): Parcelable{

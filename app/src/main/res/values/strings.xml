@@ -14,5 +14,13 @@
     <string name="label_languages">Languages</string>
     <string name="label_data_not_available">N.A</string>
     <string name="action_filters">Filters</string>
+    <string name="filter_dialog_title">Filters</string>
+    <string name="label_filter_continent">Continent</string>
+    <string name="label_filter_language">Language</string>
+    <string name="hint_filter_continent">Continent</string>
+    <string name="hint_filter_language">Language</string>
+    <string name="button_apply_text" >Apply</string>
+    <string name="button_reset_text">Reset</string>
+    <string name="no_value_placeholder">&lt; No selection &gt;</string>
     <!--<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->
 </resources>
