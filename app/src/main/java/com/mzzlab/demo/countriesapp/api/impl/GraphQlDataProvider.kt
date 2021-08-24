@@ -39,7 +39,7 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
         if(resource is Resource.Success && !language.isNullOrEmpty()){
             return Resource.Success(
                 resource.data?.filter{
-                    it.languages.contains(language)
+                    it.languages.indexOfFirst { l -> l.code == language } >= 0
                 }?: ArrayList()
                 , resource.fromCache)
         }
@@ -50,11 +50,16 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
         request: ApolloRequest<D>,
         mapper: (D?) -> Countries
     ): Resource<List<Country>> {
-        val result = client.query(request)
-        return when (result.hasErrors()) {
-            false -> Resource.Success(mapper.invoke(result.data), result.isFromCache)
-            else -> Resource.Error(createError(result, result.errors!!))
+        return try {
+            val result = client.query(request)
+            when (result.hasErrors()) {
+                false -> Resource.Success(mapper.invoke(result.data), result.isFromCache)
+                else -> Resource.Error(createError(result, result.errors!!))
+            }
+        }catch (ex: Exception){
+            Resource.Error(ex)
         }
+
     }
 
     private fun <D : Query.Data> createCountriesApolloRequest(

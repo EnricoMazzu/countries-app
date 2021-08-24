@@ -10,6 +10,7 @@ query FilteredCountries($continent: String) {
       name
       emoji
       languages {
+         code
          name
       }
    }

@@ -15,6 +15,7 @@ import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.databinding.BottomSheetFilterBinding
 import com.mzzlab.demo.countriesapp.model.CountryFilters
 import com.mzzlab.demo.countriesapp.model.Language
+import com.mzzlab.demo.countriesapp.model.isNullOrEmpty
 import com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,60 +39,66 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var filter: CountryFilters = viewModel.getCurrentFilter()
+
         setupObservable(
-            viewModel.continents,
-            binding.spinnerContinents,
-            binding.continentProgress){ l ->
-            CodeNamePair(l.code, l.name)
-        }
-        setupObservable(
-            viewModel.languages,
-            binding.spinnerLanguages,
-            binding.languagesProgress){ l ->
+            sourceData = viewModel.continents,
+            spinner = binding.spinnerContinents,
+            loader = binding.continentProgress,
+            selectedValueCode = filter.continent
+        ){ l ->
             CodeNamePair(l.code, l.name)
         }
 
+        setupObservable(
+            sourceData = viewModel.languages,
+            spinner = binding.spinnerLanguages,
+            loader = binding.languagesProgress,
+            selectedValueCode = filter.language
+        ){ l ->
+            CodeNamePair(l.code, l.name)
+        }
+
+
         binding.btnApply.setOnClickListener {
-            var actualFilter = resolveFilter();
+            val actualFilter = resolveFilter();
             viewModel.setFilter(actualFilter)
             this.dismiss()
+        }
+
+        binding.btnReset.setOnClickListener {
+            binding.spinnerLanguages.setSelection(0)
+            binding.spinnerContinents.setSelection(0)
         }
     }
 
     private fun resolveFilter(): CountryFilters {
         var itemLanguage: CodeNamePair? = binding.spinnerLanguages.selectedItem as CodeNamePair
         var itemContinent: CodeNamePair? = binding.spinnerContinents.selectedItem as CodeNamePair
-        itemLanguage?.let {
-            if(it.code == NO_SELECTION_CODE){
-                itemLanguage = null
-            }
-        }
-        itemContinent?.let {
-            if(it.code == NO_SELECTION_CODE){
-                itemContinent = null
-            }
-        }
-
-        return CountryFilters(itemContinent?.code, itemLanguage?.name)
+        itemLanguage = itemLanguage?.nullIfNoneSelection();
+        itemContinent = itemContinent?.nullIfNoneSelection();
+        return CountryFilters(itemContinent?.code, itemLanguage?.code)
     }
 
     private fun <T> setupObservable(
-        liveData: LiveData<Resource<List<T>>>,
+        sourceData: LiveData<Resource<List<T>>>,
         spinner: Spinner,
         loader: ProgressBar,
+        selectedValueCode: String?,
         mapper: (T) -> CodeNamePair
     ){
-        liveData.observe(viewLifecycleOwner){
+        sourceData.observe(viewLifecycleOwner){
             when(it){
                 is Resource.Loading -> makeLoading(spinner, loader)
-                is Resource.Success -> onSpinnerDataAvailable(spinner,loader,it.data, mapper)
+                is Resource.Success -> onSpinnerDataAvailable(spinner,loader,it.data, selectedValueCode, mapper)
                 is Resource.Error -> showError(it.getExceptionIfNotHandled())
             }
         }
     }
 
     private fun showError(exceptionIfNotHandled: Exception?) {
-        TODO("Not yet implemented")
+        //TODO
     }
 
     private fun makeLoading(spinner: Spinner, loader: ProgressBar) {
@@ -103,21 +110,22 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
     private fun <T> onSpinnerDataAvailable(spinner: Spinner,
                                            loader: ProgressBar,
                                            data: List<T>? ,
+                                           selectedValueCode: String?,
                                            mapper: (T) -> CodeNamePair){
         loader.visibility = View.GONE
-        val adapter = createAdapter(data ?: ArrayList(), mapper)
-        spinner.adapter = adapter
-        spinner.visibility = View.VISIBLE;
-    }
-
-    private fun <T> createAdapter(data: List<T>, mapper: (T) -> CodeNamePair): ArrayAdapter<CodeNamePair> {
-        val list = ArrayList<CodeNamePair>(data.map(mapper))
-        list.add(0, noValue)
-        return ArrayAdapter<CodeNamePair>(
+        val spinnerList = ArrayList<CodeNamePair>(data?.map(mapper) ?: ArrayList())
+        spinnerList.add(0, noValue)
+        val adapter = ArrayAdapter(
             requireContext(),
             R.layout.support_simple_spinner_dropdown_item,
-            list
+            spinnerList
         )
+        spinner.adapter = adapter
+        spinner.visibility = View.VISIBLE;
+        spinner.setSelection(0.coerceAtLeast(spinnerList.indexOfFirst {
+            it.code == selectedValueCode
+        }))
+
     }
 
     override fun onDestroyView() {
@@ -129,6 +137,12 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
     private data class CodeNamePair(val code: String, val name: String){
         override fun toString(): String {
             return name;
+        }
+
+        fun nullIfNoneSelection(): CodeNamePair? = if(code == NO_SELECTION_CODE){
+            null
+        }else{
+            this
         }
     }
 

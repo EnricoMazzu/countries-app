@@ -46,8 +46,7 @@ class CountriesViewModel @Inject constructor(
     val languages = countriesRepo.getLanguages().asLiveData()
 
 
-
-    fun reload() {
+     fun reload(){
         viewModelScope.launch {
             countriesRepo.load(filters.value, true)
         }
@@ -63,7 +62,9 @@ class CountriesViewModel @Inject constructor(
 
     fun isFiltered() = this.filters.value.isNullOrEmpty()
 
-
+    fun getCurrentFilter(): CountryFilters {
+        return filters.value
+    }
 
     companion object{
         const val COUNTRY_FILTERS_KEY = "COUNTRY_FILTERS_KEY"

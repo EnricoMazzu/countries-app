@@ -13,7 +13,10 @@ fun CountriesQuery.Data?.mapToModel(): List<Country> {
                 code = c.code,
                 name = c.name,
                 emoji = c.emoji,
-                languages = c.languages.map {  l-> l.name.orEmpty()}
+                languages = c.languages.map {  l-> Language(
+                    code = l.code,
+                    name = l.name.orEmpty()
+                )}
             )
         }
     }?: ArrayList()
@@ -27,7 +30,10 @@ fun FilteredCountriesQuery.Data?.mapToModel(): List<Country> {
                 code = c.code,
                 name = c.name,
                 emoji = c.emoji,
-                languages = c.languages.map {  l-> l.name.orEmpty()}
+                languages = c.languages.map {  l-> Language(
+                    code = l.code,
+                    name = l.name.orEmpty()
+                )}
             )
         }
     }?: ArrayList()

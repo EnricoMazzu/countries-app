@@ -4,6 +4,7 @@ query Countries {
       name
       emoji
       languages {
+         code
          name
       }
    }
