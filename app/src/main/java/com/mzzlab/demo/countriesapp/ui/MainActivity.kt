@@ -32,24 +32,6 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // navigate to details when a country is selected
-        /*viewModel.selectedCountry.observe(this, {
-            it?.let {
-                navController.navigate(R.id.action_countriesFragment_to_countryDetailsFragment)
-            }
-        })
-
-        val countryDetailsFragmentId = R.id.countryDetailsFragment;
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if(destination.id != countryDetailsFragmentId){
-                viewModel.invalidateSelection();
-            }
-        }
-
-        Timber.i(">>> countriesFragment %s countryDetailsFragment %s", R.id.countriesFragment , countryDetailsFragmentId )
-
-         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

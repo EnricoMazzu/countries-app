@@ -60,6 +60,6 @@ class CountryDetailsFragment : BaseFragment<FragmentCountryDetailsBinding,Countr
 
     private fun showError(exception: Exception) {
         Timber.e(exception,"error: %s", exception.message)
-
+        //TODO handle error
     }
 }

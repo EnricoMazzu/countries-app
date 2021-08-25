@@ -1,9 +1,6 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.countries
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mzzlab.demo.countriesapp.common.AppData
 import com.mzzlab.demo.countriesapp.model.Countries
 import com.mzzlab.demo.countriesapp.model.Country
@@ -23,10 +20,6 @@ class CountriesViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     ): ViewModel() {
 
-    private val filters = MutableStateFlow (
-        savedStateHandle.get(COUNTRY_FILTERS_KEY) ?: CountryFilters()
-    )
-
     init {
         Timber.i(">>> Instance: %s",this)
         viewModelScope.launch {
@@ -37,6 +30,11 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
+    private val filters = MutableStateFlow (
+        savedStateHandle.get(COUNTRY_FILTERS_KEY) ?: CountryFilters()
+    )
+
+
     fun getCountries(): AppData<Countries> {
         return countriesRepo.countries.asLiveData();
     }
@@ -44,7 +42,6 @@ class CountriesViewModel @Inject constructor(
     val continents = countriesRepo.getContinents().asLiveData()
 
     val languages = countriesRepo.getLanguages().asLiveData()
-
 
      fun reload(){
         viewModelScope.launch {

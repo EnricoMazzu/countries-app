@@ -87,7 +87,6 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
     private suspend fun getContinentsResource(): Resource<List<Continent>> {
         return try {
             val result = client.query(ContinentsQuery())
-            result.data
             when (result.hasErrors()) {
                 false -> Resource.Success(result.data.mapToModel(), result.isFromCache)
                 else -> Resource.Error(createError(result, result.errors!!))
