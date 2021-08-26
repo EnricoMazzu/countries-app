@@ -11,9 +11,11 @@ import com.apollographql.apollo3.cache.normalized.withFetchPolicy
 import com.mzzlab.demo.countriesapp.api.ApiException
 import com.mzzlab.demo.countriesapp.api.DataProvider
 import com.mzzlab.demo.countriesapp.api.ErrorCode
+import com.mzzlab.demo.countriesapp.api.asApiException
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.graphql.*
 import com.mzzlab.demo.countriesapp.model.*
+import timber.log.Timber
 
 class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
 
@@ -57,7 +59,7 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
                 else -> Resource.Error(createError(result, result.errors!!))
             }
         }catch (ex: Exception){
-            Resource.Error(ex)
+            Resource.Error(ex.asApiException())
         }
 
     }
@@ -92,7 +94,7 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
                 else -> Resource.Error(createError(result, result.errors!!))
             }
         } catch (ex: Exception) {
-            Resource.Error(ex)
+            Resource.Error(ex.asApiException())
         }
     }
 
@@ -109,25 +111,25 @@ class GraphQlDataProvider(private val client: ApolloClient) : DataProvider {
                 else -> Resource.Error(createError(result, result.errors!!))
             }
         } catch (ex: Exception) {
-            Resource.Error(ex)
+            Resource.Error(ex.asApiException())
         }
     }
 
     private suspend fun getCountryDetailsResource(code: String): Resource<CountryDetails> {
         return try {
             val result = client.query(CountryDetailsQuery(code))
-            result.data
             when (result.hasErrors()) {
                 false -> Resource.Success(result.data.mapToModel(), result.isFromCache)
                 else -> Resource.Error(createError(result, result.errors!!))
             }
         } catch (ex: Exception) {
-            Resource.Error(ex)
+            Resource.Error(ex.asApiException());
         }
     }
 
     private fun <D: Query.Data> createError(result: ApolloResponse<D>, errors: List<Error>): Exception {
-        return ApiException(ErrorCode.GENERIC_ERROR, "to be completed");
+        Timber.d("createError result = %s; errors = %s", result, errors)
+        return ApiException(ErrorCode.REMOTE_SERVICE_ERROR, "Remote service error");
     }
 
 }

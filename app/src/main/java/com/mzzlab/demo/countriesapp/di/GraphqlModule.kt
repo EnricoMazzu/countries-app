@@ -20,10 +20,16 @@ import dagger.hilt.components.SingletonComponent
 class GraphqlModule {
 
     @Provides
-    fun provideApolloClient(@ApplicationContext context: Context, @MemoryAndPersistentCache cache: NormalizedCacheFactory): ApolloClient {
-        return ApolloClient(
+    fun provideApolloClient(@MemoryOnlyCache cache: NormalizedCacheFactory): ApolloClient {
+        return with(ApolloClient(
             serverUrl = BuildConfig.COUNTRY_SERVER_URL
-        ).withNormalizedCache(cache);
+        )){
+            if(BuildConfig.CONFIGURE_CACHE){
+                this.withNormalizedCache(cache)
+            }else{
+                this
+            }
+        }
     }
 
     @Provides
@@ -38,9 +44,7 @@ class GraphqlModule {
     @Provides
     @MemoryOnlyCache
     fun provideMemoryCacheFactory(): NormalizedCacheFactory {
-        val memoryCacheFactory = MemoryCacheFactory()
-        return memoryCacheFactory
-            .chain(memoryCacheFactory)
+        return MemoryCacheFactory()
     }
 
 }
