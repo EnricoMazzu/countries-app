@@ -7,6 +7,8 @@ import com.apollographql.apollo3.cache.normalized.NormalizedCacheFactory
 import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.cache.normalized.withNormalizedCache
 import com.mzzlab.demo.countriesapp.BuildConfig
+import com.mzzlab.demo.countriesapp.di.qualifiers.MemoryAndPersistentCache
+import com.mzzlab.demo.countriesapp.di.qualifiers.MemoryOnlyCache
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,23 +20,27 @@ import dagger.hilt.components.SingletonComponent
 class GraphqlModule {
 
     @Provides
-    fun provideApolloClient(@ApplicationContext context: Context): ApolloClient {
-        var client = ApolloClient(
+    fun provideApolloClient(@ApplicationContext context: Context, @MemoryAndPersistentCache cache: NormalizedCacheFactory): ApolloClient {
+        return ApolloClient(
             serverUrl = BuildConfig.COUNTRY_SERVER_URL
-        )
-        // more for dev/test purpose
-        if(BuildConfig.USE_NATIVE_DB_CACHE){
-            val cache = createCacheFactory(context)
-            client = client.withNormalizedCache(cache);
-        }
-        return client
+        ).withNormalizedCache(cache);
     }
 
-    private fun createCacheFactory(context: Context): NormalizedCacheFactory {
+    @Provides
+    @MemoryAndPersistentCache
+    fun providePersistentCacheFactory(@ApplicationContext context: Context): NormalizedCacheFactory {
         val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, BuildConfig.CACHE_DB_NAME)
         val memoryCacheFactory = MemoryCacheFactory()
         return memoryCacheFactory
             .chain(sqlNormalizedCacheFactory)
+    }
+
+    @Provides
+    @MemoryOnlyCache
+    fun provideMemoryCacheFactory(): NormalizedCacheFactory {
+        val memoryCacheFactory = MemoryCacheFactory()
+        return memoryCacheFactory
+            .chain(memoryCacheFactory)
     }
 
 }

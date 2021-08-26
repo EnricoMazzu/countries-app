@@ -23,16 +23,9 @@ import javax.inject.Inject
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class DataInstrumentedTest {
-
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.mzzlab.demo.countriesapp", appContext.packageName)
-    }
 
     @get:Rule(order = 0)
     var hiltAndroidRule = HiltAndroidRule(this)
@@ -85,23 +78,41 @@ class DataInstrumentedTest {
         assertTrue("Resource is not success",continents is Resource.Success)
         val success = continents as Resource.Success;
         assertNotNull("Data is null", success.data)
-        val expectedSize = success.data?.size?:-1
+        val data = success.data!!
+        val expectedSize = data.size
         assertTrue("Unexpected number of languages", expectedSize > 100 )
+        data.forEach { c ->
+            assertNotNull(c.code)
+            assertNotNull(c.name)
+            assertNotNull(c.languages)
+            c.languages.forEach { l ->
+                assertNotNull(l.code)
+            }
+            assertNotNull(c.emoji)
+        }
     }
 
-    fun testFilteredByLanguageCountriesApi() = runBlocking {
+    @ExperimentalCoroutinesApi
+    @Test
+    fun testFilteredByLanguage() = runBlocking {
+
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun testFilteredByContinent() = runBlocking {
         fail("Not implemented")
     }
 
-    fun testFilteredByContinentCountriesApi() = runBlocking {
+    @ExperimentalCoroutinesApi
+    @Test
+    fun testFilteredByPair() = runBlocking {
         fail("Not implemented")
     }
 
-    fun testFilteredByPairCountriesApi() = runBlocking {
-        fail("Not implemented")
-    }
-
-    fun testFilteredNoResultCountriesApi() = runBlocking {
+    @ExperimentalCoroutinesApi
+    @Test
+    fun testFilteredNoResult() = runBlocking {
         fail("Not implemented")
     }
 }

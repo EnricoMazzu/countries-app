@@ -20,6 +20,13 @@ class CountriesViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     ): ViewModel() {
 
+    private val filters: MutableStateFlow<CountryFilters> by lazy {
+        val initialValue = savedStateHandle.get(COUNTRY_FILTERS_KEY) ?: CountryFilters()
+        MutableStateFlow(initialValue)
+    }
+
+
+
     init {
         Timber.i(">>> Instance: %s",this)
         viewModelScope.launch {
@@ -29,11 +36,6 @@ class CountriesViewModel @Inject constructor(
             }
         }
     }
-
-    private val filters = MutableStateFlow (
-        savedStateHandle.get(COUNTRY_FILTERS_KEY) ?: CountryFilters()
-    )
-
 
     fun getCountries(): AppData<Countries> {
         return countriesRepo.countries.asLiveData();
