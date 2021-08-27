@@ -38,7 +38,7 @@ class CountriesViewModelTest {
         val loading = lv.getOrAwaitValue()
         assertNotNull(loading)
         assertTrue(loading is Resource.Loading)
-        delay(1000)
+        delay(1200)
         // check become success
         val success = lv.getOrAwaitValue()
         assertNotNull(success)
@@ -51,7 +51,7 @@ class CountriesViewModelTest {
     }
 
     @Test
-    fun applyFilter()= runBlocking(Dispatchers.Main) {
+    fun applyFilter() = runBlocking(Dispatchers.Main) {
         // emulate load initial list
         val lv = viewModel.getCountries();
         delay(1200)
@@ -73,6 +73,8 @@ class CountriesViewModelTest {
         // check filter work
         assertEquals(3, content2.size)
     }
+
+
 
 
 }

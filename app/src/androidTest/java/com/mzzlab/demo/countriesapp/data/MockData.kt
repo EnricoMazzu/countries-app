@@ -60,7 +60,7 @@ object MockData {
                 )
             ),
             CountryDetails(
-                code = "cd1",
+                code = "cd4",
                 name = "cdname2",
                 emoji = "em1",
                 phone = "+34",
@@ -72,7 +72,7 @@ object MockData {
                 )
             ),
             CountryDetails(
-                code = "cd3",
+                code = "cd5",
                 name = "cdname3",
                 emoji = "em3",
                 phone = "+34",
@@ -84,7 +84,7 @@ object MockData {
                 )
             ),
             CountryDetails(
-                code = "cd1",
+                code = "cd6",
                 name = "cdname1",
                 emoji = "em1",
                 phone = "+34",
