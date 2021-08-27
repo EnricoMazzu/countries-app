@@ -25,12 +25,7 @@ task clean(type: Delete) {
 
 ext {
     livedata = "2.3.1"
-    //retrofit = "2.9.0"
     timber = "4.7.1"
-    //gson = "2.8.7"
-    //okhttp = "4.9.1"
-    //glide = "4.12.0"
-    //mapstruct = "1.4.2.Final"
     leakcanary = "2.7"
     robolectric_version = "4.6.1"
 }
