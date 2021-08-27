@@ -112,7 +112,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     }
 
     private fun showFilterDialog(){
-        findNavController().navigate(R.id.action_countriesFragment_to_filtersBottomSheetFragment)
+        FiltersBottomSheetFragment().show(childFragmentManager, "FilterDialog")
     }
 
     override fun onDestroyView() {

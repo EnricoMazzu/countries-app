@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_countriesFragment_to_countryDetailsFragment"
             app:destination="@id/countryDetailsFragment" />
-        <action
-            android:id="@+id/action_countriesFragment_to_filtersBottomSheetFragment"
-            app:destination="@id/filtersBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/countryDetailsFragment"
@@ -26,8 +23,4 @@
             android:name="countryCode"
             app:argType="string" />
     </fragment>
-    <dialog
-        android:id="@+id/filtersBottomSheetFragment"
-        android:name="com.mzzlab.demo.countriesapp.ui.fragment.details.filter.FiltersBottomSheetFragment"
-        android:label="FiltersBottomSheetFragment" />
 </navigation>
