@@ -22,5 +22,10 @@
     <string name="button_apply_text" >Apply</string>
     <string name="button_reset_text">Reset</string>
     <string name="no_value_placeholder">&lt; No selection &gt;</string>
+    <string name="err_something_went_wrong_message">Ops.. Something went wrong</string>
+    <string name="err_close_action_text">OK</string>
+    <string name="err_retry_text">Retry</string>
+    <string name="err_network_message">Network Problem</string>
+    <string name="err_remote_service_message">Remote service error</string>
     <!--<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->
 </resources>

@@ -20,18 +20,11 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
     val countries: Flow<Resource<Countries>> get()  = _countries
 
 
-    private val _selectedCountry: MutableLiveData<Country?> by lazy {
-        MutableLiveData()
-    }
-    val selectedCountry: LiveData<Country?> get() = _selectedCountry
-
-
     suspend fun load(countryFilters: CountryFilters? = null, forceNetworkFetch: Boolean = false){
         loadCountriesInternal(
             countryFilters = countryFilters,
             useNetwork = forceNetworkFetch
         )
-
     }
 
     private suspend fun loadCountriesInternal(countryFilters: CountryFilters? = null, useNetwork: Boolean) {
@@ -44,9 +37,6 @@ class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) 
         _countries.emit(resource)
     }
 
-    fun setSelectedCountry(country: Country?) {
-        _selectedCountry.postValue(country)
-    }
 
     fun getCountryDetails(code:String): Flow<Resource<CountryDetails>> {
         return flow {

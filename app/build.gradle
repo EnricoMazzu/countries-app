@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
     id 'com.apollographql.apollo3'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -73,8 +74,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$livedata"
 
     //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
     //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

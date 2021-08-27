@@ -9,16 +9,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mzzlab.demo.countriesapp.R
 import com.mzzlab.demo.countriesapp.common.Resource
-import com.mzzlab.demo.countriesapp.databinding.BottomSheetFilterBinding
 import com.mzzlab.demo.countriesapp.databinding.FragmentCountriesListBinding
 import com.mzzlab.demo.countriesapp.model.Country
-import com.mzzlab.demo.countriesapp.model.CountryFilters
 import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
 import com.mzzlab.demo.countriesapp.ui.fragment.BindingProvider
-import com.mzzlab.demo.countriesapp.ui.fragment.filter.FiltersBottomSheetFragment
+import com.mzzlab.demo.countriesapp.ui.fragment.details.filter.FiltersBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -63,6 +60,8 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
             }
         })
     }
+
+
     private fun setOnLoading() {
         binding.progressIndicator.visibility = View.VISIBLE
     }
@@ -70,7 +69,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     private fun showError(exception: Exception) {
         binding.swipeRefreshLayout.isRefreshing = false
         binding.progressIndicator.hide()
-        showErrorBar(exception)
+        showErrorSnack(exception)
     }
 
     private fun showResultList(data: List<Country>?) {
@@ -94,8 +93,8 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
 
     private fun onCountrySelected(country: Country) {
         Timber.i("onCountrySelected: %s", country)
-        viewModel.selectCountry(country);
-        findNavController().navigate(R.id.action_countriesFragment_to_countryDetailsFragment)
+        var action = CountriesFragmentDirections.actionCountriesFragmentToCountryDetailsFragment(country.code)
+        findNavController().navigate(action)
     }
 
     private fun attachToRecycleView(countriesLayoutManager: RecyclerView.LayoutManager,
@@ -113,7 +112,7 @@ class CountriesFragment : BaseFragment<FragmentCountriesListBinding, CountriesVi
     }
 
     private fun showFilterDialog(){
-        FiltersBottomSheetFragment().show(childFragmentManager, "bottom");
+        findNavController().navigate(R.id.action_countriesFragment_to_filtersBottomSheetFragment)
     }
 
     override fun onDestroyView() {

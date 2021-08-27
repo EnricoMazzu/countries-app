@@ -1,4 +1,4 @@
-package com.mzzlab.demo.countriesapp.ui.fragment.filter
+package com.mzzlab.demo.countriesapp.ui.fragment.details.filter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.mzzlab.demo.countriesapp.R
+import com.mzzlab.demo.countriesapp.api.asApiException
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.databinding.BottomSheetFilterBinding
 import com.mzzlab.demo.countriesapp.model.CountryFilters
-import com.mzzlab.demo.countriesapp.model.Language
-import com.mzzlab.demo.countriesapp.model.isNullOrEmpty
+import com.mzzlab.demo.countriesapp.ui.fragment.BaseFragment
 import com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,10 +42,10 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var filter: CountryFilters = viewModel.getCurrentFilter()
+        val filter: CountryFilters = viewModel.getCurrentFilter()
 
         setupObservable(
-            sourceData = viewModel.continents,
+            sourceData = viewModel.getContinents(),
             spinner = binding.spinnerContinents,
             loader = binding.continentProgress,
             selectedValueCode = filter.continent
@@ -52,14 +54,13 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
         }
 
         setupObservable(
-            sourceData = viewModel.languages,
+            sourceData = viewModel.getLanguages(),
             spinner = binding.spinnerLanguages,
             loader = binding.languagesProgress,
             selectedValueCode = filter.language
         ){ l ->
             CodeNamePair(l.code, l.name)
         }
-
 
         binding.btnApply.setOnClickListener {
             val actualFilter = resolveFilter();
@@ -74,8 +75,8 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
     }
 
     private fun resolveFilter(): CountryFilters {
-        var itemLanguage: CodeNamePair? = binding.spinnerLanguages.selectedItem as CodeNamePair
-        var itemContinent: CodeNamePair? = binding.spinnerContinents.selectedItem as CodeNamePair
+        var itemLanguage: CodeNamePair? = binding.spinnerLanguages.selectedItem as CodeNamePair?
+        var itemContinent: CodeNamePair? = binding.spinnerContinents.selectedItem as CodeNamePair?
         itemLanguage = itemLanguage?.nullIfNoneSelection();
         itemContinent = itemContinent?.nullIfNoneSelection();
         return CountryFilters(itemContinent?.code, itemLanguage?.code)
@@ -92,13 +93,22 @@ class FiltersBottomSheetFragment: BottomSheetDialogFragment() {
             when(it){
                 is Resource.Loading -> makeLoading(spinner, loader)
                 is Resource.Success -> onSpinnerDataAvailable(spinner,loader,it.data, selectedValueCode, mapper)
-                is Resource.Error -> showError(it.getExceptionIfNotHandled())
+                is Resource.Error -> showError(it.getExceptionIfNotHandled(),spinner, loader)
             }
         }
     }
 
-    private fun showError(exceptionIfNotHandled: Exception?) {
-        //TODO
+    private fun showError(exceptionIfNotHandled: Exception?, spinner: Spinner, loader: ProgressBar) {
+        //TODO review error management: update ui to inform better the user
+        exceptionIfNotHandled?.let {
+            loader.visibility = View.INVISIBLE
+            spinner.visibility = View.INVISIBLE;
+            Toast.makeText(
+                requireActivity(),
+                getString(BaseFragment.resolveErrorRes(it.asApiException().code)),
+                Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun makeLoading(spinner: Spinner, loader: ProgressBar) {

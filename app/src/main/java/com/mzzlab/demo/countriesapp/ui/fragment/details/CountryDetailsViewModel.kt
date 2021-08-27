@@ -1,19 +1,51 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.details
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.mzzlab.demo.countriesapp.common.AppData
+import com.mzzlab.demo.countriesapp.common.MutableAppData
+import com.mzzlab.demo.countriesapp.common.Resource
+import com.mzzlab.demo.countriesapp.common.isResourceLoaded
 import com.mzzlab.demo.countriesapp.model.CountryDetails
 import com.mzzlab.demo.countriesapp.repo.CountriesRepo
+import com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CountryDetailsViewModel @Inject constructor(private val countriesRepo: CountriesRepo): ViewModel() {
+class CountryDetailsViewModel @Inject constructor(
+    private val countriesRepo: CountriesRepo,
+    private val savedStateHandle: SavedStateHandle
+): ViewModel() {
 
-    fun getCountryDetails(): AppData<CountryDetails> {
-        val code = countriesRepo.selectedCountry.value?.code;
-        return countriesRepo.getCountryDetails(code!!).asLiveData()
+    private val countryDetails: MediatorLiveData<Resource<CountryDetails>> by lazy {
+        MediatorLiveData()
     }
+
+    private var countryCode:String? = null
+
+    private fun loadDetails(code: String) {
+        val source = countriesRepo.getCountryDetails(code).asLiveData()
+        countryDetails.addSource(source){
+            countryDetails.value = it
+            if(isResourceLoaded(it)){
+                countryDetails.removeSource(source)
+            }
+        }
+    }
+
+    fun reload(){
+        loadDetails(countryCode!!)
+    }
+
+    fun getCountryDetails(): AppData<CountryDetails> = countryDetails
+
+    fun setCountryCode(countryCode: String?) {
+        this.countryCode = countryCode?: savedStateHandle.get("selected")
+        reload()
+    }
+
 }

@@ -5,6 +5,7 @@ import com.mzzlab.demo.countriesapp.api.ApiException
 import com.mzzlab.demo.countriesapp.api.ErrorCode
 
 object ErrorResolver {
+
     @JvmStatic
     val mapper = mapOf(
         ApolloNetworkException::class to ErrorCode.NETWORK_ERROR,

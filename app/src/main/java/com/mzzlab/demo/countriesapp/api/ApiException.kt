@@ -13,11 +13,13 @@ enum class ErrorCode {
 
 open class ApiException(val code: ErrorCode, message: String?, cause: Throwable? = null): Exception(message, cause)
 
-
+/**
+ * Call to translate the exception as ApiException. Is safe call this function multiple time.
+ */
 fun Exception.asApiException(): ApiException {
     return when(this){
-        is ApolloException -> ErrorResolver.resolveApolloException(this)
         is ApiException -> this
+        is ApolloException -> ErrorResolver.resolveApolloException(this)
         else -> ApiException(ErrorCode.GENERIC_ERROR, this.message.orEmpty(), this)
     }
 }
