@@ -12,6 +12,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+/**
+ * The repo of countries. This class use the dataProvider instance to fetch data
+ * from backend (or from cache)
+ */
 class CountriesRepo @Inject constructor(private val dataProvider: DataProvider) {
 
     private val _countries: MutableStateFlow<Resource<Countries>> by lazy {

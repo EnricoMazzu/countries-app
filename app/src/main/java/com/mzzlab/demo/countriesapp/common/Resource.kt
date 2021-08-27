@@ -1,5 +1,9 @@
 package com.mzzlab.demo.countriesapp.common
 
+/**
+ * Represent a resource with a state (loading, success or error)
+ * Resource status is immutable: a new instance is required to represent a state change
+ */
 sealed class Resource<out T : Any> {
     data class Loading<out T: Any>(val data: T? = null, val initial:Boolean = false): Resource<T>()
     data class Success<out T : Any>(val data: T?, val fromCache: Boolean? = false) : Resource<T>()

@@ -1,18 +1,15 @@
 package com.mzzlab.demo.countriesapp.ui.fragment.details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.mzzlab.demo.countriesapp.common.AppData
-import com.mzzlab.demo.countriesapp.common.MutableAppData
 import com.mzzlab.demo.countriesapp.common.Resource
 import com.mzzlab.demo.countriesapp.common.isResourceLoaded
 import com.mzzlab.demo.countriesapp.model.CountryDetails
 import com.mzzlab.demo.countriesapp.repo.CountriesRepo
-import com.mzzlab.demo.countriesapp.ui.fragment.countries.CountriesViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

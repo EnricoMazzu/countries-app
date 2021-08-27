@@ -23,7 +23,6 @@ class CountriesViewModel @Inject constructor(
     }
 
     init {
-        Timber.i(">>> Instance: %s",this)
         viewModelScope.launch {
             filters.collect {
                 savedStateHandle.set(COUNTRY_FILTERS_KEY, it)
@@ -53,8 +52,6 @@ class CountriesViewModel @Inject constructor(
     fun setFilter(filters: CountryFilters) {
         this.filters.value = filters
     }
-
-    fun isFiltered() = this.filters.value.isNullOrEmpty()
 
     fun getCurrentFilter(): CountryFilters {
         return filters.value

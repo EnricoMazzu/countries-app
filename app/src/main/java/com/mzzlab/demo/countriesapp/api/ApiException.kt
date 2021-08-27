@@ -11,6 +11,9 @@ enum class ErrorCode {
     CACHE_MISS_ERROR,
 }
 
+/**
+ * Represent a fail in an app api invocation
+ */
 open class ApiException(val code: ErrorCode, message: String?, cause: Throwable? = null): Exception(message, cause)
 
 /**

@@ -19,8 +19,6 @@ class CountriesRecyclerViewAdapter(private val selectionListener: CountrySelecti
         private val emojiView = binding.emojiView;
         private val lblCountryName = binding.lblCountryName
         private val lblCode = binding.lblCode;
-        //private val idView: TextView = binding.itemNumber
-        //private val contentView: TextView = binding.content
         private var country: Country? = null
 
         init {
