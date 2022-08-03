@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="emoji_flag_detail_text_size">40sp</dimen>
+    <dimen name="emoji_flag_detail_width">80sp</dimen>
+</resources>

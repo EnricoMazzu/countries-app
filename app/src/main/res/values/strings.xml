@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">CountriesApp</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="countries_fragment_label">Countries</string>
+    <string name="details_fragment_label">Details</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="flag_label">Flag</string>
+    <string name="label_continent">Continent</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_capital">Capital</string>
+    <string name="label_currency">Currency</string>
+    <string name="label_languages">Languages</string>
+    <string name="label_data_not_available">N.A</string>
+    <string name="action_filters">Filters</string>
+    <string name="filter_dialog_title">Filters</string>
+    <string name="label_filter_continent">Continent</string>
+    <string name="label_filter_language">Language</string>
+    <string name="hint_filter_continent">Continent</string>
+    <string name="hint_filter_language">Language</string>
+    <string name="button_apply_text" >Apply</string>
+    <string name="button_reset_text">Reset</string>
+    <string name="no_value_placeholder">&lt; No selection &gt;</string>
+    <string name="err_something_went_wrong_message">Ops.. Something went wrong</string>
+    <string name="err_close_action_text">OK</string>
+    <string name="err_retry_text">Retry</string>
+    <string name="err_network_message">Network Problem</string>
+    <string name="err_remote_service_message">Remote service error</string>
+    <!--<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->
+</resources>
